@@ -1,0 +1,9 @@
+{
+  "rhMin":  0.00,
+  "rhMax": 85.0,
+  "tempCMin": 26.7,
+  "tempCMax": 47.0,
+  "rhVariance": 1.0,
+  "tempCVariance": 2.0,
+  "sampleWaitS": 15.0
+}
