@@ -18,21 +18,23 @@ class Sample:
 		return self.value
 
 class TemperatureSample:
-	def __init__(self, id, timestamp, tempC):
+	def __init__(self, id, sourceId, timestamp, tempC):
 		self.id = id
+		self.sourceId = sourceId
 		self.timestamp = timestamp
 		self.temperatureCelcius = tempC # CONTRACTS MATTER: standard JSON compatible naming
 
 class HumiditySample:
-	def __init__(self, id, timestamp, relative_humidity):
+	def __init__(self, id, sourceId, timestamp, relative_humidity):
 		self.id = id
+		self.sourceId = sourceId
 		self.timestamp = timestamp
 		self.relativeHumidity = relative_humidity # CONTRACTS MATTER: standard JSON combatible naming
 
 class TemperatureHumiditySample:
-	def __init__(self, id, timestamp, tempC, humidity):
-		self.temperature_sample = TemperatureSample(id, timestamp, tempC)
-		self.humidity_sample = HumiditySample(id, timestamp, humidity)
+	def __init__(self, id, sourceId, timestamp, tempC, humidity):
+		self.temperature_sample = TemperatureSample(id, sourceId, timestamp, tempC)
+		self.humidity_sample = HumiditySample(id, sourceId, timestamp, humidity)
 		self.humidity = humidity
 	def getTempC(self):
 		return self.temperature_sample.temperatureCelcius
@@ -62,6 +64,7 @@ class TemperatureHumiditySensor:
 			self.report_hook = config.report_hook
 
 	def takeSample(self):
+		sourceId = "Main Temperature and Humidity Sensor"
 		now = datetime.now()
 		utcFormat = now.astimezone(pytz.UTC).isoformat()
 		sensor = self.sensor
@@ -71,7 +74,7 @@ class TemperatureHumiditySensor:
 			tempF = (tempC * 9 / 5) + 32
 			humidity = sensor.humidity
 			self.report(utcFormat, tempC, tempF, humidity)
-			return TemperatureHumiditySample(uuid.uuid4(), utcFormat, tempC, humidity)
+			return TemperatureHumiditySample(uuid.uuid4(), sourceId, utcFormat, tempC, humidity)
 		except RuntimeError as error:
 			print (error.args[0])
 			raise error
